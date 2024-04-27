@@ -1,0 +1,159 @@
+.*
+~*
+node_modules/
+/build
+/dist
+/vendor
+/bower_components
+/_site
+ehthumbs.db
+Thumbs.db
+*.sublime-project
+*.sublime-workspace
+*.komodoproject
+# Archive
+*.7z
+*.ace
+*.ar
+*.cab
+*.deb
+*.rar
+*.rpm
+*.tar
+*.zip
+
+# Backup
+*.bak
+*.bak1
+*.bak2
+*.bak3
+*.bkp
+*.old
+*.swp
+*.dis
+*.disabled
+
+# Configuration
+*.cfg
+*.config
+*.conf
+*.ini
+*.prefs
+*.properties
+
+# Data
+*.csv
+*.dat
+*.db
+*.json
+*.sqlite
+*.xml
+
+# Certificate
+*.cert
+*.crt
+*.der
+*.pem
+*.pfx
+
+# Disk image
+*.dmg
+*.img
+*.iso
+
+# Dynamic library
+*.dll
+*.dylib
+*.so
+
+# Executable
+*.exe
+
+# Compressed
+*.gz
+*.gzip
+*.tgz
+
+# JSON
+*.json
+*.yaml
+*.yml
+
+# Java
+*.class
+*.jar
+
+# Key
+*.key
+*.priv
+*.pub
+
+# Library
+*.lib
+*.a
+*.la
+
+# Lock
+*.lock
+*.lockfile
+
+# Log
+*.log
+*.txt
+
+# Markdown
+*.md
+*.markdown
+
+# Object
+*.obj
+*.o
+
+# Patch
+*.patch
+*.diff
+
+# Python compiled
+*.pyc
+*.pyo
+
+# Shell script
+*.sh
+*.bash
+*.bashrc
+*.zsh
+
+# Solution
+*.sln
+*.csproj
+*.vcproj
+*.vbproj
+
+# SQLite database
+*.sqlite
+*.db
+
+# Swap
+*.swp
+
+# Temporary
+*.tmp
+*.temp
+
+# Visual Studio project
+*.vcxproj
+*.vcproj
+
+# Web font
+*.woff
+*.woff2
+*.eot
+*.ttf
+*.otf
+
+!.editorconfig
+!.env.example
+!.git-blame-ignore-revs
+!.gitignore
+!.nvmrc
+!.phpcs.xml.dist
