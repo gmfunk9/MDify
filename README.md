@@ -2,6 +2,8 @@
 
 MDify Utils is a set of paste-and-go text tools. Each panel processes input immediately in place.
 
+![Screenshot of MDify tools](https://github.com/user-attachments/assets/fbb2466a-65e8-4f45-a2df-ea03da3891f5)
+
 ## Panels
 
 - **Emdash Fix** — replaces every emdash with `; `.
