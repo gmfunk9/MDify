@@ -1,5 +1,12 @@
-const turndown = new TurndownService();
-const switcher = document.querySelector('.theme_switcher');
+const turndown = typeof TurndownService !== 'undefined'
+  ? new TurndownService()
+  : { turndown: t => t };
+const mk = typeof marked !== 'undefined'
+  ? marked
+  : { parse: t => t };
+const switcher = typeof document !== 'undefined'
+  ? document.querySelector('.theme_switcher')
+  : null;
 if (switcher) {
   switcher.addEventListener('click', () => {
     document.body.classList.toggle('dark_theme');
@@ -36,7 +43,7 @@ function stripComments(t) {
 }
 
 function mdToRich(t) {
-  return marked.parse(t);
+  return mk.parse(t);
 }
 
 function richToMd(t) {
@@ -48,7 +55,7 @@ function htmlToMd(t) {
 }
 
 function mdToHtml(t) {
-  return marked.parse(t);
+  return mk.parse(t);
 }
 
 function countSyllables(w) {
@@ -94,14 +101,16 @@ function sortLinesDesc(t) {
   return lines.join('\n');
 }
 
-attach('dash_box', replaceDash);
-attach('blank_box', trimBlank);
-attach('comment_box', stripComments);
-attach('md_to_rich', mdToRich);
-attach('rich_to_md', richToMd);
-attach('html_to_md', htmlToMd);
-attach('md_to_html', mdToHtml);
-attach('stat_box', stats);
+if (typeof document !== 'undefined') {
+  attach('dash_box', replaceDash);
+  attach('blank_box', trimBlank);
+  attach('comment_box', stripComments);
+  attach('md_to_rich', mdToRich);
+  attach('rich_to_md', richToMd);
+  attach('html_to_md', htmlToMd);
+  attach('md_to_html', mdToHtml);
+  attach('stat_box', stats);
+}
 
 function initSortBox() {
   const sortBox = document.getElementById('sort_box');
@@ -123,5 +132,19 @@ function initSortBox() {
   });
 }
 
-initSortBox();
+if (typeof document !== 'undefined') {
+  initSortBox();
+}
+
+if (typeof module !== 'undefined') {
+  module.exports = {
+    replaceDash,
+    trimBlank,
+    stripComments,
+    countSyllables,
+    stats,
+    sortLinesAsc,
+    sortLinesDesc,
+  };
+}
 
