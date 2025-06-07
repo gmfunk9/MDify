@@ -1,33 +1,25 @@
-const turndown = typeof TurndownService !== 'undefined'
-  ? new TurndownService()
-  : { turndown: t => t };
-const mk = typeof marked !== 'undefined'
-  ? marked
-  : { parse: t => t };
-const switcher = typeof document !== 'undefined'
-  ? document.querySelector('.theme_switcher')
-  : null;
-if (switcher) {
-  switcher.addEventListener('click', () => {
-    document.body.classList.toggle('dark_theme');
-  });
+const turndown = typeof TurndownService === 'undefined'
+  ? {turndown: t => t}
+  : new TurndownService();
+const mk = typeof marked === 'undefined'
+  ? {parse: t => t}
+  : marked;
+
+function debounce(fn, ms) {
+  let t;
+  return (...a) => {
+    clearTimeout(t);
+    t = setTimeout(() => fn(...a), ms);
+  };
 }
 
 function attach(id, fn) {
   const box = document.getElementById(id);
   if (!box) return;
-  const input = box.querySelector('.in');
+  const input = box.querySelector('textarea');
   if (!input) return;
-  const output = box.querySelector('.out');
-  if (!output) return;
-  input.addEventListener('input', () => {
-    output.value = fn(input.value);
-  });
-  if (output.tagName === 'PRE') {
-    input.addEventListener('input', () => {
-      output.textContent = fn(input.value);
-    });
-  }
+  const run = () => { input.value = fn(input.value); };
+  input.addEventListener('input', debounce(run, 300));
 }
 
 function replaceDash(t) {
@@ -65,7 +57,8 @@ function countSyllables(w) {
 }
 
 function stats(t) {
-  const words = t.match(/\b\w+\b/g) || [];
+  const found = t.match(/\b\w+\b/g);
+  const words = found ? found : [];
   const chars = t.length;
   const sentences = t.split(/[.!?]+/).filter(s => s.trim()).length;
   const paras = t.split(/\n\s*\n/).filter(p => p.trim()).length;
@@ -117,19 +110,18 @@ function initSortBox() {
   if (!sortBox) return;
   const toggle = sortBox.querySelector('.sort_toggle');
   if (!toggle) return;
-  const input = sortBox.querySelector('.in');
+  const input = sortBox.querySelector('textarea');
   if (!input) return;
-  const output = sortBox.querySelector('.out');
-  if (!output) return;
   let desc = false;
+  const run = () => {
+    input.value = desc ? sortLinesDesc(input.value) : sortLinesAsc(input.value);
+  };
   toggle.addEventListener('click', () => {
     desc = !desc;
     toggle.textContent = desc ? 'Desc' : 'Asc';
-    output.value = desc ? sortLinesDesc(input.value) : sortLinesAsc(input.value);
+    run();
   });
-  input.addEventListener('input', () => {
-    output.value = desc ? sortLinesDesc(input.value) : sortLinesAsc(input.value);
-  });
+  input.addEventListener('input', debounce(run, 300));
 }
 
 if (typeof document !== 'undefined') {
@@ -147,4 +139,3 @@ if (typeof module !== 'undefined') {
     sortLinesDesc,
   };
 }
-
