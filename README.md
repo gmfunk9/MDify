@@ -1,6 +1,6 @@
 # MDify Utils
 
-MDify Utils is a collection of paste-in tools for quick text cleanup and conversion. Each panel runs immediately on input with no configuration.
+MDify Utils is a set of paste-and-go text tools. Each panel processes input immediately in place.
 
 ## Panels
 
@@ -18,6 +18,7 @@ MDify Utils is a collection of paste-in tools for quick text cleanup and convers
 
 1. Open `index.html` in your browser.
 2. Paste text into any panel.
-3. Copy the transformed output from the paired field.
+3. The textarea updates with the result.
+4. Fonts load from Google; JetBrains Mono falls back to your system monospace.
 
 MIT License.
