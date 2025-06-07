@@ -4,20 +4,10 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>MDify</title>
-		<style>
-            *{box-sizing:border-box;margin:0;padding:0}
-            body{flex-direction:column;align-items:center;height:100vh;padding:1% 2%;background-color:#e0e0e0;color:#333;overflow: hidden}
-            body.dark_theme{background-color:#333;color:#f5f5f5}
-            .theme_switcher{position:fixed;top:10px;right:10px;cursor:pointer}
-            .fp_flex{display:flex;gap:1%;width:100%}
-            .flex_head {height:calc(10vh - 1% - 2%);overflow:auto}
-            .flex_panel{height:90vh;overflow: auto}
-            .editable_area{flex:1;overflow-y:auto}
-            .fp_border{border: solid 1px #000;box-shadow:2px 2px #000}
-
-        </style>
-		<script src="/turndown.min.js"></script>
-	</head>
+                <link rel="stylesheet" href="style.css" />
+                <script src="/turndown.min.js"></script>
+                <script src="script.js" defer></script>
+        </head>
 	<body class="fp_flex">
 		<div class="theme_switcher">Toggle Theme</div>
 		<header class="fp_flex flex_head">
@@ -28,89 +18,5 @@
 			<div id="input_area" class="editable_area fp_border" contenteditable></div>
 			<textarea id="output_area" class="editable_area fp_border"></textarea>
 		</section>
-		<script>
-			const md = new TurndownService(),
-            switcher = document.querySelector(".theme_switcher"),
-            input = document.getElementById("input_area"),
-            output = document.getElementById("output_area");
-
-            
-            md.addRule('h1', {
-                    filter: 'h1', replacement: (content) => `# ${content}\n` }
-            );
-            
-            md.addRule('h2', {
-                    filter: 'h2', replacement: (content) => `## ${content}\n` }
-            );
-            
-            md.addRule('bold_text_style', {
-                    filter: (node) => node.nodeName === "SPAN" && node.style.fontWeight === "bolder", 
-                    replacement: (content) => `**${content}**` 
-                }
-            );
-            
-            md.addRule('form', {
-                    filter: 'form', 
-                    replacement: (content, node) => `\n## ${node.getAttribute('name') || 'Form'}\n${content.trim()}\n` 
-                }
-            );
-            
-            md.addRule('form', {
-                    filter: 'form', 
-                    replacement: (content, node) => `\`\`\`form\n% #${node.getAttribute('name') || 'Form'}\n${content.trim()}\n\`\`\`\n` 
-                }
-            );
-            
-            md.addRule('input', {
-                    filter: (node) => node.nodeName === 'INPUT' && node.type !== 'submit', 
-                    replacement: (content, node) => `::${node.getAttribute('placeholder') ? '(' + node.getAttribute('placeholder') + ')' : ''}\n` 
-                }
-            );
-            
-            md.addRule('select', {
-                    filter: 'select', 
-                    replacement: (content, node) => `::${Array.from(node.querySelectorAll('option')).map(option => option.textContent.trim()).join('|')}` 
-                }
-            );
-            
-            md.addRule('button', {
-                    filter: (node) => node.nodeName === 'BUTTON' && node.type === 'submit', 
-                    replacement: (content, node) => `[■ ${content}](${node.form ? (node.form.getAttribute('action') || node.form.getAttribute('method') || '#') : '#'})\n` 
-                }
-            );
-            
-            md.addRule('a_button', {
-                    filter: (node) => node.nodeName === 'A' && (node.classList.contains('button') || node.classList.contains('btn') || node.classList.contains('elementor-button')), 
-                    replacement: (content, node) => `@[${content}](${node.getAttribute('href')})\n` 
-                }
-            );
-            
-            md.addRule('checkbox', {
-                    filter: (node) => node.nodeName === 'INPUT' && node.type === 'checkbox', 
-                    replacement: (content, node) => `\n[${node.checked ? 'x' : ' '}] ` 
-                }
-            );
-            
-            md.addRule('radio', {
-                    filter: (node) => node.nodeName === 'INPUT' && node.type === 'radio', 
-                    replacement: (content, node) => `\n[${node.checked ? 'x' : ' '}] ` 
-                }
-            );
-            
-            md.addRule('label', {
-                    filter: (node) => node.nodeName === 'LABEL', 
-                    replacement: (content) => `$${content}$\n` 
-                }
-            );
-
-            
-			input.addEventListener("DOMSubtreeModified", updateOutput);
-			input.addEventListener("input", updateOutput);
-			switcher.addEventListener("click", () => document.body.classList.toggle("dark_theme"));
-
-			function updateOutput() {
-				output.value = md.turndown(input.innerHTML);
-			}
-		</script>
-	</body>
+        </body>
 </html>

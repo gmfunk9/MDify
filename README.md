@@ -20,6 +20,7 @@ MDify is a powerful tool that converts your content into Markdown, saving you ti
 1. Open MDify in your browser
 2. Paste your content into the input area
 3. Watch as MDify converts your content to Markdown instantly
+4. Modify `style.css` or `script.js` for custom behavior
 
 **Contribute**
 
