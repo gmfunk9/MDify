@@ -1,22 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>MDify</title>
-                <link rel="stylesheet" href="style.css" />
-		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/turndown/6.0.0/turndown.min.js"></script>
-                <script src="script.js" defer></script>
-        </head>
-	<body class="fp_flex">
-		<div class="theme_switcher">Toggle Theme</div>
-		<header class="fp_flex flex_head">
-            <h1>MDify</h1>
-            <p>Transform your content in seconds with FunkProductions' MDify. A powerful tool that converts HTML, Google Docs, and PDFs to Markdown. Say goodbye to tedious formatting and hello to streamlined content creation. MDify enables developers, writers, and students to easily adapt their text to Markdown, making it perfect for use with Large Language Models like ChatGPT. Whether you're updating legacy documents for long-term archiving or creating internal documentation, MDify simplifies the process of converting your text to Markdown, saving you time and effort. Get started now and discover the benefits of Markdown formatting!</p>
-        </header>
-		<section class="fp_flex flex_panel">
-			<div id="input_area" class="editable_area fp_border" contenteditable></div>
-			<textarea id="output_area" class="editable_area fp_border"></textarea>
-		</section>
-        </body>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MDify Utils</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/turndown/6.0.0/turndown.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
+<script src="script.js" defer></script>
+</head>
+<body>
+<div class="theme_switcher">Toggle Theme</div>
+<h1>MDify Utils</h1>
+<div class="grid">
+  <div id="dash_box" class="card vivid1">
+    <h2>Emdash Fix</h2>
+    <textarea class="in"></textarea>
+    <textarea class="out"></textarea>
+  </div>
+  <div id="blank_box" class="card vivid2">
+    <h2>Trim Blank Lines</h2>
+    <textarea class="in"></textarea>
+    <textarea class="out"></textarea>
+  </div>
+  <div id="comment_box" class="card vivid3">
+    <h2>Remove /* */</h2>
+    <textarea class="in"></textarea>
+    <textarea class="out"></textarea>
+  </div>
+  <div id="md_to_rich" class="card vivid4">
+    <h2>MD ➜ Rich</h2>
+    <textarea class="in"></textarea>
+    <textarea class="out"></textarea>
+  </div>
+  <div id="rich_to_md" class="card vivid5">
+    <h2>Rich ➜ MD</h2>
+    <textarea class="in"></textarea>
+    <textarea class="out"></textarea>
+  </div>
+  <div id="html_to_md" class="card vivid6">
+    <h2>HTML ➜ MD</h2>
+    <textarea class="in"></textarea>
+    <textarea class="out"></textarea>
+  </div>
+  <div id="md_to_html" class="card vivid7">
+    <h2>MD ➜ HTML</h2>
+    <textarea class="in"></textarea>
+    <textarea class="out"></textarea>
+  </div>
+  <div id="stat_box" class="card vivid8">
+    <h2>Stats</h2>
+    <textarea class="in"></textarea>
+    <pre class="out"></pre>
+  </div>
+  <div id="sort_box" class="card vivid9">
+    <h2>Sort Lines</h2>
+    <button class="sort_toggle">Asc</button>
+    <textarea class="in"></textarea>
+    <textarea class="out"></textarea>
+  </div>
+</div>
+</body>
 </html>
