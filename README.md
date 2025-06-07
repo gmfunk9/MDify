@@ -19,5 +19,6 @@ MDify Utils is a set of paste-and-go text tools. Each panel processes input imme
 1. Open `index.html` in your browser.
 2. Paste text into any panel.
 3. The textarea updates with the result.
+4. Fonts load from Google; JetBrains Mono falls back to your system monospace.
 
 MIT License.

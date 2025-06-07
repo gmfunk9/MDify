@@ -74,7 +74,8 @@ function stats(t) {
   for (const w of words) {
     const x = w.toLowerCase();
     if (stops.includes(x)) continue;
-    freq[x] = (freq[x] || 0) + 1;
+    if (!freq[x]) freq[x] = 0;
+    freq[x] = freq[x] + 1;
   }
   const sorted = Object.entries(freq).sort((a,b) => b[1]-a[1]).slice(0,10);
   let dens = '';
