@@ -140,32 +140,6 @@ textarea:focus,
   opacity: 1;
 }
 
-.template-controls {
-  padding: .35vw .65vw 0;
-  display: grid;
-  gap: .35vw;
-}
-
-.template-controls select {
-  width: 100%;
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: #fff;
-  font-family: inherit;
-  font-size: max(12px, 0.9vw);
-  padding: .35vw;
-  border-radius: 3px;
-}
-
-.template-controls select:focus {
-  outline: 2px solid rgba(255, 255, 255, 0.6);
-  outline-offset: 1px;
-}
-
-.template-controls button {
-  width: 100%;
-}
-
 .sort_toggle {
   background: rgba(255, 255, 255, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.3);

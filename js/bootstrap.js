@@ -15,8 +15,8 @@
     app.attach("stat_box", app.stats);
     app.attach("rich_to_h2", app.extractH2fromHTML);
     app.attach("minify_box", app.minifyString);
+    app.attach("template_box", app.splitTwitterThread);
     app.initSortBox();
-    app.initTemplatePanel();
     app.initSplash();
     app.initTooltips();
   }
