@@ -252,24 +252,6 @@ function stats(t) {
   )}\n${dens}`;
 }
 
-function extractHashtags(text) {
-  if (!text) return "";
-  const matches = text.match(/#[\p{L}\p{N}_-]+/gu);
-  if (!matches) return "";
-  const seen = {};
-  for (const raw of matches) {
-    const trimmed = raw.replace(/^#+/, "");
-    if (!trimmed) continue;
-    const lower = trimmed.toLowerCase();
-    if (seen[lower]) continue;
-    seen[lower] = `#${lower}`;
-  }
-  const sorted = Object.keys(seen).sort((a, b) => a.localeCompare(b));
-  const ordered = [];
-  for (const key of sorted) ordered.push(seen[key]);
-  return ordered.join("\n");
-}
-
 function sortLinesAsc(t) {
   const lines = Array.from(new Set(t.split("\n")));
   lines.sort((a, b) => a.localeCompare(b));
@@ -352,7 +334,6 @@ if (typeof document !== "undefined") {
   attach("html_to_md", htmlToMd);
   attach("md_to_html", mdToHtml);
   attach("stat_box", stats);
-  attach("hashtag_box", extractHashtags);
   attach("rich_to_h2", extractH2fromHTML);
   attach("minify_box", minifyString);
 }
@@ -384,13 +365,60 @@ function initSortBox() {
   input.addEventListener("input", debounce(run, 300));
 }
 
-const templates = {
-  twitter: "Hook.\n\n1. Key takeaway\n2. Second hit\n\nCall to action + link", 
-  instagram:
-    "Lead line.\n\nStory beat one.\nStory beat two.\n\nCTA → link in bio\n\n#brand #topic", 
-  readme:
-    "# Project Name\n\n## Quick Start\n1. Install deps\n2. Run the tool\n\n## Features\n- Highlight value\n- Explain usage\n\n## License\nMIT",
-};
+function collectSentences(text) {
+  if (!text) return [];
+  const matches = text.match(/[^.!?]+[.!?]*/g);
+  if (!matches) {
+    const trimmed = text.trim();
+    if (trimmed === "") return [];
+    return [trimmed];
+  }
+  const sentences = [];
+  for (const raw of matches) {
+    const trimmed = raw.trim();
+    if (trimmed === "") continue;
+    sentences.push(trimmed);
+  }
+  if (sentences.length > 0) return sentences;
+  const fallback = text.trim();
+  if (fallback === "") return [];
+  return [fallback];
+}
+
+function splitTwitterThread(text) {
+  if (!text) return "";
+  const trimmed = text.trim();
+  if (trimmed === "") return "";
+  const sentences = collectSentences(trimmed);
+  if (sentences.length === 0) return "";
+  const limit = 240;
+  const tweets = [];
+  let chunk = "";
+  for (const sentence of sentences) {
+    const clean = sentence.trim();
+    if (clean === "") continue;
+    if (chunk === "") {
+      chunk = clean;
+      continue;
+    }
+    const candidate = `${chunk} ${clean}`.trim();
+    if (candidate.length <= limit) {
+      chunk = candidate;
+      continue;
+    }
+    tweets.push(chunk);
+    chunk = clean;
+    if (chunk.length <= limit) continue;
+    tweets.push(chunk);
+    chunk = "";
+  }
+  if (chunk !== "") tweets.push(chunk);
+  if (tweets.length === 0) return "";
+  return tweets.join("\n\n");
+}
+
+const twitterTemplate =
+  "Paste long-form copy here.\n\nClick Split Thread to chunk into ≤240 char tweets.";
 
 function initTemplatePanel() {
   const box = document.getElementById("template_box");
@@ -399,19 +427,32 @@ function initTemplatePanel() {
   if (!select) return;
   const area = box.querySelector("textarea");
   if (!area) return;
+  const splitBtn = box.querySelector(".thread_split");
+  if (!splitBtn) return;
   const storedText = loadPanel("template_box");
   if (storedText !== "") area.value = storedText;
   const storedChoice = loadPref("template.choice");
   if (storedChoice) select.value = storedChoice;
   const apply = () => {
     const choice = select.value;
-    let template = templates[choice];
-    if (!template) template = "";
-    area.value = template;
-    savePanel("template_box", template);
     savePref("template.choice", choice);
+    if (choice !== "twitter") return;
+    const existing = area.value.trim();
+    if (existing !== "") return;
+    area.value = twitterTemplate;
+    savePanel("template_box", area.value);
   };
   select.addEventListener("change", apply);
+  splitBtn.addEventListener("click", () => {
+    const result = splitTwitterThread(area.value);
+    if (result === "") {
+      area.value = "";
+      savePanel("template_box", "");
+      return;
+    }
+    area.value = result;
+    savePanel("template_box", area.value);
+  });
   area.addEventListener("input", () => savePanel("template_box", area.value));
   if (area.value === "") apply();
 }
@@ -476,7 +517,7 @@ if (typeof module !== "undefined") {
     extractH2fromHTML,
     minifyString,
     stats,
-    extractHashtags,
+    splitTwitterThread,
     sortLinesAsc,
     sortLinesDesc,
   };

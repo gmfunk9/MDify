@@ -26,8 +26,15 @@ function run() {
   const desc = funcs.sortLinesDesc('b\na\nc\nb');
   assert.strictEqual(desc, 'c\nb\na');
 
-  const tags = funcs.extractHashtags('Draft #BuildInPublic + #buildinpublic + #Makers');
-  assert.strictEqual(tags, '#buildinpublic\n#makers');
+  const partA = `${'A'.repeat(100)}.`;
+  const partB = `${'B'.repeat(150)}.`;
+  const partC = `${'C'.repeat(50)}.`;
+  const threadInput = `${partA} ${partB} ${partC}`;
+  const thread = funcs.splitTwitterThread(threadInput);
+  const tweets = thread.split('\n\n');
+  assert.strictEqual(tweets.length, 2);
+  assert.strictEqual(tweets[0], partA);
+  assert.strictEqual(tweets[1], `${partB} ${partC}`);
 
   console.log('All tests passed');
 }

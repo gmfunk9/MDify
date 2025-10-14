@@ -146,7 +146,7 @@
         <textarea></textarea>
     </div>
     <div id="comment_box" class="panel p3">
-        <div class="header">Remove /* */
+        <div class="header">RM COMMENTS
             <span class="info-icon" tabindex="0">
                 (i)
                 <span class="tooltip">
@@ -157,19 +157,6 @@
             </span>
         </div>
         <textarea></textarea>
-    </div>
-    <div id="hashtag_box" class="panel p12">
-        <div class="header">Hashtag Extractor
-            <span class="info-icon" tabindex="0">
-                (i)
-                <span class="tooltip">
-                    Pulls #tags from any text and deduplicates them.<br>
-                    Sorts alphabetically and outputs one tag per line.<br>
-                    Paste content, wait, copy the cleaned tag stack.
-                </span>
-            </span>
-        </div>
-        <textarea placeholder="Paste copy with hashtags here"></textarea>
     </div>
     <div id="stat_box" class="panel p8">
         <div class="header">Stats
@@ -215,9 +202,9 @@
             <span class="info-icon" tabindex="0">
                 (i)
                 <span class="tooltip">
-                    Quick-drop presets for social posts and READMEs.<br>
-                    Pick a format from the list, tweak copy inline.<br>
-                    Selection persists for your next session.
+                    Drop long-form copy, keep sentences intact.<br>
+                    Click Split Thread to break at ≤240 chars.<br>
+                    Selection and edits persist across visits.
                 </span>
             </span>
         </div>
@@ -225,11 +212,10 @@
             <label class="sr-only" for="template-select">Template preset</label>
             <select id="template-select">
                 <option value="twitter">Twitter Thread</option>
-                <option value="instagram">Instagram Caption</option>
-                <option value="readme">README Skeleton</option>
             </select>
+            <button type="button" class="sort_toggle thread_split">Split Thread</button>
         </div>
-        <textarea placeholder="Selected template will appear here"></textarea>
+        <textarea placeholder="Paste copy or use the preset above"></textarea>
     </div>
 </div>
 
