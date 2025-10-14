@@ -26,17 +26,18 @@ function run() {
   const desc = funcs.sortLinesDesc('b\na\nc\nb');
   assert.strictEqual(desc, 'c\nb\na');
 
-  const firstTweet = 'First line\nSecond line ';
+  const firstTweet = 'First line\n';
+  const secondLine = 'Second line ';
   const secondTweet = 'B'.repeat(220);
   const separator = '\n\n---\n\n';
-  const threadInput = `${firstTweet}${secondTweet}`;
+  const threadInput = `${firstTweet}${secondLine}${secondTweet}`;
   const thread = funcs.splitTwitterThread(threadInput);
   assert(thread.includes(separator));
   const tweets = thread.split(separator);
   assert.strictEqual(tweets.length, 2);
   assert.strictEqual(tweets[0], firstTweet);
-  assert.strictEqual(tweets[1], secondTweet);
-  assert(tweets[0].includes('\n'));
+  assert.strictEqual(tweets[1], `${secondLine}${secondTweet}`);
+  assert(tweets[0].endsWith('\n'));
 
   console.log('All tests passed');
 }
