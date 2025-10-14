@@ -123,16 +123,23 @@ function debounce(fn, ms) {
   };
 }
 
+function normalizeDashLine(line) {
+  let current = line.replace(/\u2013/g, "\u2014");
+  current = current.replace(/(\$?\d[\d,]*)\s*\u2014\s*(\$?\d[\d,]*)/g, "$1-$2");
+  current = current.replace(/(\d)\s*-\s*(\d)/g, "$1-$2");
+  const listStart = /^\s*[-*+]\s/.test(current);
+  if (listStart) return current.replace(/\s*\u2014\s*/g, ": ");
+  current = current.replace(/\u2014/g, " - ");
+  current = current.replace(/\s{2,}/g, " ");
+  return current.trimEnd();
+}
+
 function replaceDash(text) {
-  return text
-    .replace(/(\d+)–(\d+)/g, "$1-$2")
-    .replace(/–/g, "-")
-    .replace(/(\$?\d{1,3}(?:,\d{3})*)—(\$?\d+)/g, "$1-$2")
-    .replace(/^ *[-*+] +(\w+( +\w+){0,4})—/gm, (match, p1) => {
-      return match.replace(/—/, ":");
-    })
-    .replace(/(\w{3,}) ?— ?(?=\w{3,})/g, "$1; ")
-    .replace(/ ?— ?/g, ", ");           
+  if (!text) return "";
+  const lines = text.split("\n");
+  const cleaned = [];
+  for (const line of lines) cleaned.push(normalizeDashLine(line));
+  return cleaned.join("\n");
 }
 
 function trimBlank(t) {
@@ -143,13 +150,16 @@ function trimBlank(t) {
 }
 
 function stripComments(t) {
-  return t
-    // JS/CSS-style: /* comment */
-    .replace(/\/\*[\s\S]*?\*\//g, "")
-    // HTML-style: <!-- comment -->
-    .replace(/<!--[\s\S]*?-->/g, "")
-    // Python-style: """docstring""" or '''docstring'''
-    .replace(/("""|''')[\s\S]*?\1/g, "");
+  let result = t.replace(/\/\*[\s\S]*?\*\//g, "");
+  result = result.replace(/<!--[\s\S]*?-->/g, "");
+  result = result.replace(/("""|''')[\s\S]*?\1/g, "");
+  result = result.replace(/(^|[^:])\/\/.*(?=\n|$)/g, (match, prefix) => {
+    return prefix;
+  });
+  result = result.replace(/(^|\n)\s*#(?![\{!]).*?(?=\n|$)/g, "$1");
+  result = result.replace(/{{[\s\S]*?}}/g, "");
+  result = result.replace(/{%[\s\S]*?%}/g, "");
+  return result;
 }
 
 function mdToRich(t) {
@@ -242,6 +252,24 @@ function stats(t) {
   )}\n${dens}`;
 }
 
+function extractHashtags(text) {
+  if (!text) return "";
+  const matches = text.match(/#[\p{L}\p{N}_-]+/gu);
+  if (!matches) return "";
+  const seen = {};
+  for (const raw of matches) {
+    const trimmed = raw.replace(/^#+/, "");
+    if (!trimmed) continue;
+    const lower = trimmed.toLowerCase();
+    if (seen[lower]) continue;
+    seen[lower] = `#${lower}`;
+  }
+  const sorted = Object.keys(seen).sort((a, b) => a.localeCompare(b));
+  const ordered = [];
+  for (const key of sorted) ordered.push(seen[key]);
+  return ordered.join("\n");
+}
+
 function sortLinesAsc(t) {
   const lines = Array.from(new Set(t.split("\n")));
   lines.sort((a, b) => a.localeCompare(b));
@@ -254,6 +282,46 @@ function sortLinesDesc(t) {
   return lines.join("\n");
 }
 
+const storageAllowed = typeof localStorage !== "undefined";
+
+function panelKey(id) {
+  return `mdify.panel.${id}`;
+}
+
+function prefKey(id) {
+  return `mdify.pref.${id}`;
+}
+
+function loadPanel(id) {
+  if (!storageAllowed) return "";
+  const key = panelKey(id);
+  const stored = localStorage.getItem(key);
+  if (!stored) return "";
+  return stored;
+}
+
+function savePanel(id, value) {
+  if (!storageAllowed) return;
+  const key = panelKey(id);
+  if (typeof value === "undefined") return;
+  localStorage.setItem(key, value);
+}
+
+function loadPref(id) {
+  if (!storageAllowed) return "";
+  const key = prefKey(id);
+  const stored = localStorage.getItem(key);
+  if (!stored) return "";
+  return stored;
+}
+
+function savePref(id, value) {
+  if (!storageAllowed) return;
+  const key = prefKey(id);
+  if (typeof value === "undefined") return;
+  localStorage.setItem(key, value);
+}
+
 // Attach logic for textarea and contenteditable blocks
 function attach(id, fn) {
   const box = document.getElementById(id);
@@ -264,8 +332,14 @@ function attach(id, fn) {
   const getVal = () => (isEditable ? input.innerHTML : input.value);
   const setVal = (v) =>
     isEditable ? (input.innerHTML = v) : (input.value = v);
+  const stored = loadPanel(id);
+  if (stored !== "") setVal(stored);
 
-  const run = () => setVal(fn(getVal()));
+  const run = () => {
+    const value = fn(getVal());
+    setVal(value);
+    savePanel(id, value);
+  };
   input.addEventListener("input", debounce(run, 300));
 }
 
@@ -278,6 +352,7 @@ if (typeof document !== "undefined") {
   attach("html_to_md", htmlToMd);
   attach("md_to_html", mdToHtml);
   attach("stat_box", stats);
+  attach("hashtag_box", extractHashtags);
   attach("rich_to_h2", extractH2fromHTML);
   attach("minify_box", minifyString);
 }
@@ -289,62 +364,122 @@ function initSortBox() {
   if (!toggle) return;
   const input = sortBox.querySelector("textarea");
   if (!input) return;
-  let desc = false;
+  const storedText = loadPanel("sort_box");
+  if (storedText !== "") input.value = storedText;
+  const storedPref = loadPref("sort.desc");
+  let desc = storedPref === "true";
+  toggle.textContent = desc ? "Desc" : "Asc";
   const run = () => {
-    input.value = desc ? sortLinesDesc(input.value) : sortLinesAsc(input.value);
+    const source = input.value;
+    const sorted = desc ? sortLinesDesc(source) : sortLinesAsc(source);
+    input.value = sorted;
+    savePanel("sort_box", sorted);
   };
   toggle.addEventListener("click", () => {
     desc = !desc;
     toggle.textContent = desc ? "Desc" : "Asc";
+    savePref("sort.desc", desc ? "true" : "false");
     run();
   });
   input.addEventListener("input", debounce(run, 300));
 }
 
+const templates = {
+  twitter: "Hook.\n\n1. Key takeaway\n2. Second hit\n\nCall to action + link", 
+  instagram:
+    "Lead line.\n\nStory beat one.\nStory beat two.\n\nCTA → link in bio\n\n#brand #topic", 
+  readme:
+    "# Project Name\n\n## Quick Start\n1. Install deps\n2. Run the tool\n\n## Features\n- Highlight value\n- Explain usage\n\n## License\nMIT",
+};
+
+function initTemplatePanel() {
+  const box = document.getElementById("template_box");
+  if (!box) return;
+  const select = box.querySelector("select");
+  if (!select) return;
+  const area = box.querySelector("textarea");
+  if (!area) return;
+  const storedText = loadPanel("template_box");
+  if (storedText !== "") area.value = storedText;
+  const storedChoice = loadPref("template.choice");
+  if (storedChoice) select.value = storedChoice;
+  const apply = () => {
+    const choice = select.value;
+    let template = templates[choice];
+    if (!template) template = "";
+    area.value = template;
+    savePanel("template_box", template);
+    savePref("template.choice", choice);
+  };
+  select.addEventListener("change", apply);
+  area.addEventListener("input", () => savePanel("template_box", area.value));
+  if (area.value === "") apply();
+}
+
 if (typeof document !== "undefined") {
   initSortBox();
-}
+  initTemplatePanel();
 
+  (function () {
+    const splash = document.getElementById("intro-splash");
+    if (!splash) return;
+    const close = () => splash.remove();
+    document.addEventListener("keydown", close, { once: true });
+    document.addEventListener("click", close, { once: true });
+    const btn = document.getElementById("splash-close");
+    if (btn) btn.addEventListener("click", close);
+  })();
 
-
-(function(){
-  const splash = document.getElementById("intro-splash");
-  const close = () => splash?.remove();
-
-  document.addEventListener("keydown", close, { once: true });
-  document.addEventListener("click", close, { once: true });
-
-  const btn = document.getElementById("splash-close");
-  if (btn) btn.addEventListener("click", close);
-})();
-
-
-
-document.querySelectorAll('.info-icon').forEach(function(icon) {
-    icon.addEventListener('mouseenter', showTooltip);
-    icon.addEventListener('focus', showTooltip);
-    icon.addEventListener('mouseleave', hideTooltip);
-    icon.addEventListener('blur', hideTooltip);
-    icon.addEventListener('click', showTooltip); // for keyboard access
-});
-
-function showTooltip(e) {
-    var tooltipBox = document.getElementById('global-tooltip');
-    var tooltipContent = this.querySelector('.tooltip');
+  function showTooltip() {
+    const tooltipBox = document.getElementById("global-tooltip");
+    if (!tooltipBox) return;
+    const tooltipContent = this.querySelector(".tooltip");
     if (!tooltipContent) return;
     tooltipBox.innerHTML = tooltipContent.innerHTML;
-    tooltipBox.style.display = 'block';
-    setTimeout(function(){
-        tooltipBox.classList.add('active');
+    tooltipBox.style.display = "block";
+    setTimeout(() => {
+      tooltipBox.classList.add("active");
     }, 1);
-}
-function hideTooltip() {
-    var tooltipBox = document.getElementById('global-tooltip');
-    tooltipBox.classList.remove('active');
-    setTimeout(function(){
-        tooltipBox.style.display = 'none';
-        tooltipBox.innerHTML = '';
+  }
+
+  function hideTooltip() {
+    const tooltipBox = document.getElementById("global-tooltip");
+    if (!tooltipBox) return;
+    tooltipBox.classList.remove("active");
+    setTimeout(() => {
+      tooltipBox.style.display = "none";
+      tooltipBox.innerHTML = "";
     }, 150);
+  }
+
+  const infoIcons = document.querySelectorAll(".info-icon");
+  infoIcons.forEach((icon) => {
+    icon.addEventListener("mouseenter", showTooltip);
+    icon.addEventListener("focus", showTooltip);
+    icon.addEventListener("mouseleave", hideTooltip);
+    icon.addEventListener("blur", hideTooltip);
+    icon.addEventListener("click", showTooltip);
+  });
+}
+
+
+if (typeof module !== "undefined") {
+  module.exports = {
+    replaceDash,
+    trimBlank,
+    stripComments,
+    mdToRich,
+    richToMd,
+    htmlToMd,
+    mdToHtml,
+    countSyllables,
+    extractH2fromHTML,
+    minifyString,
+    stats,
+    extractHashtags,
+    sortLinesAsc,
+    sortLinesDesc,
+  };
 }
 
 

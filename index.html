@@ -10,19 +10,36 @@
     <meta property="og:description" content="Trim, convert, and clean Markdown or HTML. A visual toolkit for devs and writers. Powered by FunkPd." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://mdify.funkpd.com/" />
-    <meta property="og:image" content="https://mdify.funkpd.com/assets/MD-ify.webp" />
+    <meta property="og:image" content="https://mdify.funkpd.com/assets/social-preview.svg" />
+    <meta property="og:image:type" content="image/svg+xml" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:site_name" content="FunkPd" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="MDify – Markdown & HTML Tools" />
     <meta name="twitter:description" content="Fix emdashes, strip comments, convert Markdown ↔ HTML. All in one clean grid UI." />
-    <meta name="twitter:image" content="https://mdify.funkpd.com/assets/MD-ify.webp" />
+    <meta name="twitter:image" content="https://mdify.funkpd.com/assets/social-preview.svg" />
     <meta name="twitter:site" content="@FunkPd" />
 
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/turndown/6.0.0/turndown.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
     <script src="script.js" defer></script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "MDify",
+        "url": "https://mdify.funkpd.com/",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://mdify.funkpd.com/?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>
 </head>
 <body>
 <div id="intro-splash">
@@ -141,6 +158,19 @@
         </div>
         <textarea></textarea>
     </div>
+    <div id="hashtag_box" class="panel p12">
+        <div class="header">Hashtag Extractor
+            <span class="info-icon" tabindex="0">
+                (i)
+                <span class="tooltip">
+                    Pulls #tags from any text and deduplicates them.<br>
+                    Sorts alphabetically and outputs one tag per line.<br>
+                    Paste content, wait, copy the cleaned tag stack.
+                </span>
+            </span>
+        </div>
+        <textarea placeholder="Paste copy with hashtags here"></textarea>
+    </div>
     <div id="stat_box" class="panel p8">
         <div class="header">Stats
             <span class="info-icon" tabindex="0">
@@ -179,6 +209,27 @@
             </span>
         </div>
         <textarea></textarea>
+    </div>
+    <div id="template_box" class="panel p13">
+        <div class="header">Templates
+            <span class="info-icon" tabindex="0">
+                (i)
+                <span class="tooltip">
+                    Quick-drop presets for social posts and READMEs.<br>
+                    Pick a format from the list, tweak copy inline.<br>
+                    Selection persists for your next session.
+                </span>
+            </span>
+        </div>
+        <div class="template-controls">
+            <label class="sr-only" for="template-select">Template preset</label>
+            <select id="template-select">
+                <option value="twitter">Twitter Thread</option>
+                <option value="instagram">Instagram Caption</option>
+                <option value="readme">README Skeleton</option>
+            </select>
+        </div>
+        <textarea placeholder="Selected template will appear here"></textarea>
     </div>
 </div>
 

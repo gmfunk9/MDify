@@ -21,10 +21,11 @@ html, body {
       "emdash blank"
       "mdrich richmd"
       "htmlmd mdhtml"
-      "remove stats"
+      "remove hashtag"
       "sort stats"
       "sort stats"
       "richh2 stats"
+      "template stats"
       "minify minify"
       "minify minify";
 }
@@ -33,12 +34,13 @@ html, body {
 @media (min-width:768px) {
     .grid {
         grid-template-columns: 1fr 1fr 1fr 1.3fr;
-        grid-template-rows: 1fr 1fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
         grid-template-areas:
             "emdash blank sort stats"
             "mdrich richmd sort stats"
-            "htmlmd mdhtml remove stats"
-            "richh2 minify minify minify";
+            "htmlmd mdhtml hashtag stats"
+            "remove template minify minify"
+            "richh2 template minify minify";
         }
 }
 
@@ -54,6 +56,8 @@ html, body {
 #sort_box     { grid-area: sort; }
 #rich_to_h2   { grid-area: richh2; }
 #minify_box   { grid-area: minify; }
+#hashtag_box  { grid-area: hashtag; }
+#template_box { grid-area: template; }
 
 /* Panel Colors */
 #dash_box     { --panel-bg: #e67e00; }
@@ -67,6 +71,8 @@ html, body {
 #sort_box     { --panel-bg: #00b5d8; }
 #rich_to_h2   { --panel-bg: #d53f8c; }
 #minify_box   { --panel-bg: #ff8c00; }
+#hashtag_box  { --panel-bg: #2f855a; }
+#template_box { --panel-bg: #4a5568; }
 
 .panel {
   display: flex;
@@ -137,6 +143,26 @@ textarea:focus,
   opacity: 1;
 }
 
+.template-controls {
+  padding: .35vw .65vw 0;
+}
+
+.template-controls select {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  font-family: inherit;
+  font-size: max(12px, 0.9vw);
+  padding: .35vw;
+  border-radius: 3px;
+}
+
+.template-controls select:focus {
+  outline: 2px solid rgba(255, 255, 255, 0.6);
+  outline-offset: 1px;
+}
+
 .sort_toggle {
   background: rgba(255, 255, 255, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.3);
@@ -178,6 +204,18 @@ textarea::-webkit-scrollbar-thumb,
 textarea::-webkit-scrollbar-thumb:hover,
 [contenteditable="true"]::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.3);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 
