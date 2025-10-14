@@ -1,43 +1,39 @@
 # MDify Utility Scope — Max Word Economy Checklist
 
-## Writer Mode (keep visible)
-- [] **Tone Fixer** → normalize emdash, quotes, ellipses, emoji spacing  
-- [] **Trim Lines** → remove blank/whitespace lines  
-- [] **Stats+Rhythm** → word/char/tweet counts, Flesch, emoji density  
-- [] **Hashtag Extractor** → pull, dedupe, sort, export  
-- [] **Hook Splitter** → chunk by tweet/caption length  
-- [] **Sort+Dedup** → clean hashtag/prompt lists  
-- [] **Convert Format** → auto-detect MD↔HTML↔Rich  
+## Delivered
+- [x] Emdash fixer for punctuation normalization.
+- [x] Trim blank lines and whitespace-only rows.
+- [x] Sort lines with dedupe and asc/desc toggle.
+- [x] Markdown ↔ HTML converters (MD→HTML, HTML→MD, MD→Rich, Rich→MD).
+- [x] Rich→H2 outline scraper.
+- [x] Comment stripper for `/* */`, `<!-- -->`, and `""" """` blocks.
+- [x] Text stats (word/char counts, Flesch, read/speak time, keyword density).
+- [x] Minifier to collapse whitespace.
+- [x] Intro splash and global tooltips for onboarding.
 
-## Dev Mode (Advanced)
-- [] **Remove Comments** → multi-syntax (`/* */`, `<!-- -->`, `""" """`, `#`)  
-- [] **Minify** → collapse whitespace/code  
-- [] **Indent / Quote Normalizer / Slugify** → optional utilities  
+## Backlog
+- [ ] Tighten dash fixer to guard number ranges and list markers.
+- [ ] Expand comment stripping to cover inline `//`, `#`, and templating tags.
+- [ ] Add hashtag extraction panel with dedupe and sort workflow.
+- [ ] Provide simple preset templates (Twitter, IG, README) via dropdown.
+- [ ] Persist user mode and panel preferences with `localStorage`.
 
-## Drop / Merge
-- [] Merge `MD→HTML`, `HTML→MD`, `Rich→MD` into **Convert Format**  
-- [] Remove **Rich→H2** (fold into Outline Extractor)  
-- [] Hide niche/low-use tiles under Advanced  
+## Implementation Notes
+- [ ] Keep utilities as pure JS functions with minimal DOM coupling.
+- [ ] Ensure each panel runs debounced transforms and can be undone manually.
+- [ ] Use Turndown and Marked via CDN; pin versions and monitor changelogs.
+- [ ] Favor early returns and avoid nested conditionals.
 
-## UX Rules
-- [] **Mode toggle:** Writer | Dev (persist via localStorage)  
-- [] **Single input / multi-output** + small undo stack  
-- [] **Presets:** Twitter, IG, Readme, Commit  
-- [] **Preview:** diff (Tone Fixer), live Stats  
-- [] **Shortcuts:** top 5 writer tools  
-- [] **Local metrics:** track use frequency  
+## UX
+- [ ] Keep grid responsive; verify focus and tooltip behavior on keyboard.
+- [ ] Maintain single-input panels to avoid multi-output complexity.
+- [ ] Document tooltip copy alongside panel markup in `index.html`.
 
-## Build Order
-1. Convert Format / Trim / Tone Fixer / Stats / Hashtag Extractor  
-2. Hook Splitter / Sort / Presets  
-3. Dev tools (Comments, Minify, Indent)  
-4. Advanced (Outline, density, sentiment)  
+## SEO
+- [ ] Add `<link rel="icon" type="image/svg+xml" href="/favicon.svg">` to `index.html`.
+- [ ] Provide fallback `favicon.ico` for legacy browsers.
+- [ ] Confirm canonical URL, meta description, and Open Graph tags match deployment target.
+- [ ] Produce 1200×630 social preview image under 200 KB.
+- [ ] Add JSON-LD `WebSite` schema with `potentialAction` for site search.
 
-## Implementation
-- [] Pure JS, regex + turndown + marked  
-- [] Safe reversible ops, diff + undo  
-- [] Minimal UI — instant feedback, no modals  
-- [] LocalStorage: mode + presets only  
-
-**Goal:** one-grid, context-shifting toolkit for writers + devs — instant, safe, zero bloat.
-
+**Goal:** One-grid, context-shifting toolkit for writers and devs — instant, safe, zero bloat.
