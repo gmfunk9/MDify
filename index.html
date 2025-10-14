@@ -1,53 +1,190 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MDify Utils</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/turndown/6.0.0/turndown.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
-<script src="script.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MDify – Markdown and Text Utilities</title>
+    <meta name="description" content="MDify is a grid of instant text tools for Markdown, HTML, and plain text. Fix emdashes, strip comments, convert formats, and more." />
+    <link rel="canonical" href="https://mdify.funkpd.com/" />
+    <meta property="og:title" content="MDify – Grid of Instant Text Tools" />
+    <meta property="og:description" content="Trim, convert, and clean Markdown or HTML. A visual toolkit for devs and writers. Powered by FunkPd." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://mdify.funkpd.com/" />
+    <meta property="og:image" content="https://mdify.funkpd.com/assets/MD-ify.webp" />
+    <meta property="og:site_name" content="FunkPd" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="MDify – Markdown & HTML Tools" />
+    <meta name="twitter:description" content="Fix emdashes, strip comments, convert Markdown ↔ HTML. All in one clean grid UI." />
+    <meta name="twitter:image" content="https://mdify.funkpd.com/assets/MD-ify.webp" />
+    <meta name="twitter:site" content="@FunkPd" />
+
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/turndown/6.0.0/turndown.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
+    <script src="script.js" defer></script>
 </head>
 <body>
-<div class="grid">
-  <div id="dash_box" class="panel p1">
-    <div class="header">Emdash Fix</div>
-    <textarea></textarea>
-  </div>
-  <div id="blank_box" class="panel p2">
-    <div class="header">Trim Blank Lines</div>
-    <textarea></textarea>
-  </div>
-  <div id="comment_box" class="panel p3">
-    <div class="header">Remove /* */</div>
-    <textarea></textarea>
-  </div>
-  <div id="md_to_rich" class="panel p4">
-    <div class="header">MD ➜ Rich</div>
-    <textarea></textarea>
-  </div>
-  <div id="rich_to_md" class="panel p5">
-    <div class="header">Rich ➜ MD</div>
-    <textarea></textarea>
-  </div>
-  <div id="html_to_md" class="panel p6">
-    <div class="header">HTML ➜ MD</div>
-    <textarea></textarea>
-  </div>
-  <div id="md_to_html" class="panel p7">
-    <div class="header">MD ➜ HTML</div>
-    <textarea></textarea>
-  </div>
-  <div id="stat_box" class="panel p8">
-    <div class="header">Stats</div>
-    <textarea></textarea>
-  </div>
-  <div id="sort_box" class="panel p9" style="grid-row: span 2;">
-    <div class="header">Sort Lines <button class="sort_toggle">Asc</button></div>
-    <textarea></textarea>
+<div id="intro-splash">
+  <div class="splash-content">
+    <h1>MDify: Markdown & Text Utilities</h1>
+    <p class="desc">Instant visual tools for Markdown, HTML, and raw text. Built for devs, writers, and no-BS workflows.</p>
+    <p class="explain">Fix emdashes, strip comments, trim whitespace, sort lines, convert between Markdown, HTML, and rich text. Every tool in one grid. Live. No clutter.</p>
+    <a class="explain" href="https://funkpd.com">Website by FunkPd. internet with soul.</a>
+    <button id="splash-close">Enter</button>
   </div>
 </div>
+
+<div class="grid">
+    <div id="dash_box" class="panel p1">
+        <div class="header">Emdash — Fix
+            <span class="info-icon" tabindex="0">
+                (i)
+                <span class="tooltip">
+                    Replaces all em-dashes and en-dashes with standard punctuation.<br>
+                    Hyphenates number ranges, rewrites lists, flattens styled separators.<br>
+                    Use this if AI overused dashes and your text looks fake.
+                </span>
+            </span>
+        </div>
+        <textarea></textarea>
+    </div>
+    <div id="blank_box" class="panel p2">
+        <div class="header">Trim Blank Lines
+            <span class="info-icon" tabindex="0">
+                (i)
+                <span class="tooltip">
+                    Deletes every line with only whitespace.<br>
+                    Keeps all other lines exactly as they are.<br>
+                    Use this to clean pasted or bloated content.
+                </span>
+            </span>
+        </div>
+        <textarea></textarea>
+    </div>
+    <div id="sort_box" class="panel p9" style="grid-row: span 2;">
+        <div class="header">Sort Lines
+            <span class="info-icon" tabindex="0">
+                (i)
+                <span class="tooltip">
+                    Sorts lines alphabetically and removes duplicates.<br>
+                    Toggle between ascending and descending.<br>
+                    Use this on unordered lists or prompt sets.
+                </span>
+            </span>
+            <button class="sort_toggle">Asc</button>
+        </div>
+        <textarea></textarea>
+    </div>
+    <div id="md_to_rich" class="panel p4">
+        <div class="header">MD ➜ Rich
+            <span class="info-icon" tabindex="0">
+                (i)
+                <span class="tooltip">
+                    Converts Markdown to raw HTML.<br>
+                    No styling or preview is applied.<br>
+                    Use when you need raw HTML output fast.
+                </span>
+            </span>
+        </div>
+        <textarea></textarea>
+    </div>
+    <div id="rich_to_md" class="panel p5">
+        <div class="header">Rich ➜ MD
+            <span class="info-icon" tabindex="0">
+                (i)
+                <span class="tooltip">
+                    Convert innerHTML to Markdown.<br>
+                    Complex layouts or styles may break.<br>
+                    Use for simple pasted blocks only.
+                </span>
+            </span>
+        </div>
+        <pre class="contentbox" contenteditable="true" spellcheck="false" style="flex:1;outline:none;overflow:auto;padding:16px;font-size:13px;background:inherit;color:inherit;"></pre>
+    </div>
+    <div id="html_to_md" class="panel p6">
+        <div class="header">HTML ➜ MD
+            <span class="info-icon" tabindex="0">
+                (i)
+                <span class="tooltip">
+                    Runs turndown on pasted HTML to produce Markdown.<br>
+                    Keeps tags like &lt;h1&gt;, &lt;ul&gt;, and &lt;a&gt;.<br>
+                    Use this to reuse HTML in markdown-based tools.
+                </span>
+            </span>
+        </div>
+        <textarea></textarea>
+    </div>
+    <div id="md_to_html" class="panel p7">
+        <div class="header">MD ➜ HTML
+            <span class="info-icon" tabindex="0">
+                (i)
+                <span class="tooltip">
+                    Parses Markdown into HTML.<br>
+                    No validation or styling is added.<br>
+                    Use when you need HTML and nothing else.
+                </span>
+            </span>
+        </div>
+        <textarea></textarea>
+    </div>
+    <div id="comment_box" class="panel p3">
+        <div class="header">Remove /* */
+            <span class="info-icon" tabindex="0">
+                (i)
+                <span class="tooltip">
+                    Strips JS-style, HTML, and Python block comments.<br>
+                    Only removes block-style syntax, not inline or shell comments.<br>
+                    Use before publishing code or prompts.
+                </span>
+            </span>
+        </div>
+        <textarea></textarea>
+    </div>
+    <div id="stat_box" class="panel p8">
+        <div class="header">Stats
+            <span class="info-icon" tabindex="0">
+                (i)
+                <span class="tooltip">
+                    Counts words, chars, sentences, and paragraphs.<br>
+                    Estimates reading time, speaking time, and Flesch score.<br>
+                    Highlights common keywords with frequency.
+                </span>
+            </span>
+        </div>
+        <textarea></textarea>
+    </div>
+    <div id="rich_to_h2" class="panel p10">
+        <div class="header">Rich ➜ H2
+            <span class="info-icon" tabindex="0">
+                (i)
+                <span class="tooltip">
+                    Extracts all &lt;h2&gt; tags and converts to ## Markdown.<br>
+                    Falls back to bold tags and other headings if needed.<br>
+                    Use this to get outlines from messy HTML.
+                </span>
+            </span>
+        </div>
+        <div class="contentbox" contenteditable="true" spellcheck="false" style="flex:1;outline:none;overflow:auto;padding:16px;font-size:13px;background:inherit;color:inherit;"></div>
+    </div>
+    <div id="minify_box" class="panel p11">
+        <div class="header">Minify
+            <span class="info-icon" tabindex="0">
+                (i)
+                <span class="tooltip">
+                    Removes all newlines and compresses whitespace to single spaces.<br>
+                    Text content is preserved, structure is not.<br>
+                    Use this when space matters more than format.
+                </span>
+            </span>
+        </div>
+        <textarea></textarea>
+    </div>
+</div>
+
+<div id="global-tooltip" class="global-tooltip" style="display:none;"></div>
+
+
 </body>
+
 </html>
